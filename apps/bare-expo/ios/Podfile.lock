@@ -1216,7 +1216,7 @@ SPEC CHECKSUMS:
   EXBrightness: d3b7c97082f22d07baec9442c65be185f85929fd
   EXCalendar: 93dcc0f5288066f65d53b730abfb2a5fd69ccc87
   EXCamera: 749802944176f32cce72cfc99d53e6d9ecfd7311
-  EXCellular: 06e641f1c34e9d772da3c69cfe9ef4828791e3f8
+  EXCellular: 392d2406fd03bb942d2a97fb7e5c1eb04fd6673e
   EXClipboard: 2f4ac26d2d1fb3b40346fd4a93d5303c04608b07
   EXConstants: 5ea0cedcacca6f27f0ec54f185e01e0970ee1286
   EXContacts: c4168e6fba1b2b075e30f7504b79de42afdfd0d8
@@ -1267,7 +1267,7 @@ SPEC CHECKSUMS:
   EXSplashScreen: 7bca6748b2ebf21b1fed6c91d4c4db689f95a9a6
   EXSQLite: d918f5fd3c21b7eb2cf79c9ae7feca89937989b3
   EXStoreReview: b1f68ed0369b0f1c443214ac8d6881ef3b64de9a
-  EXStructuredHeaders: 8b778f4e82ec7b5fb29dc69748f32bc674dbe644
+  EXStructuredHeaders: 384ccdf0c09ed0be8fc73d4b2d70e436cd195975
   EXTaskManager: d30b4a5723a5969443da644d786853923efa5f17
   EXTrackingTransparency: ea1f4c054b2e0908d2a781faca6f4a5402278220
   EXUpdatesInterface: 8e4f28434a2e6a75803c4ea0ab12cfb07ebb3438
@@ -1347,8 +1347,8 @@ SPEC CHECKSUMS:
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   SDWebImage: 7acbb57630ac7db4a495547fb73916ff3e432f6b
   UMAppLoader: fe2708bb0ac5cd70052bc207d06aa3b7e72b9e97
-  UMCore: 912510bbff567298d738590f17788a8516f9d7f3
-  UMReactNativeAdapter: ee750f3cf40e149643f9191de3ce8c02202f198f
+  UMCore: 13555ae40690cf77b62c6f07bca9c2d973bf3717
+  UMReactNativeAdapter: 6b7768ea8787f5fb559ac9642fb92f349c1367ed
   UMTaskManagerInterface: 203c11259d2699b5b3a4eda4adbc466f5cb5c561
   Yoga: 7740b94929bbacbddda59bf115b5317e9a161598
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
