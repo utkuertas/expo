@@ -375,7 +375,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)_showSplashScreenWithProvider:(id<EXSplashScreenViewProvider>)provider
 {
   EXSplashScreenService *splashScreenService = (EXSplashScreenService *)[UMModuleRegistryProvider getSingletonModuleForClass:[EXSplashScreenService class]];
-  
   // EXSplashScreenService presents a splash screen on a root view controller
   // at the start of the app. Since we want the EXAppViewController to manage
   // the lifecycle of the splash screen we need to:
