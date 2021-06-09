@@ -71,6 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isStandalone;
 @property (nonatomic, assign) BOOL isHomeApp;
 
+
 /*
  * Controller for handling all messages from bundler/fetcher.
  * It shows another UIWindow with text and percentage progress.
@@ -337,7 +338,6 @@ NS_ASSUME_NONNULL_BEGIN
   }
   if (!_managedAppSplashScreenViewProvider) {
     _managedAppSplashScreenViewProvider = [[EXManagedAppSplashScreenViewProvider alloc] initWithManifest:manifest];
-
     [self _showSplashScreenWithProvider:_managedAppSplashScreenViewProvider];
   } else {
     [_managedAppSplashScreenViewProvider updateSplashScreenViewWithManifest:manifest];
@@ -375,7 +375,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)_showSplashScreenWithProvider:(id<EXSplashScreenViewProvider>)provider
 {
   EXSplashScreenService *splashScreenService = (EXSplashScreenService *)[UMModuleRegistryProvider getSingletonModuleForClass:[EXSplashScreenService class]];
-
   // EXSplashScreenService presents a splash screen on a root view controller
   // at the start of the app. Since we want the EXAppViewController to manage
   // the lifecycle of the splash screen we need to:
