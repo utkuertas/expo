@@ -25,12 +25,12 @@ NSString * const EXPermissionsKey = @"ExpoPermissions";
 
 UM_REGISTER_SINGLETON_MODULE(Permissions)
 
-- (EXPermissionStatus)getPermission:(NSString *)permissionType forExperience:(NSString *)experienceId
+- (EXPermissionStatus)getPermission:(NSString *)permissionType forExperience:(NSString *)experienceScopeKey
 {
   permissionType = [EXPermissionsManager mapPermissionType:permissionType];
 
-  NSString *experienceIdKey = [EXPermissionsManager escapedResourceName:experienceId];
-  NSDictionary *experiencePermissions = _permissionsCache[experienceIdKey];
+  NSString *experienceScopeKeyKey = [EXPermissionsManager escapedResourceName:experienceScopeKey];
+  NSDictionary *experiencePermissions = _permissionsCache[experienceScopeKeyKey];
   if (!experiencePermissions) {
     return EXPermissionStatusUndetermined;
   }
@@ -47,29 +47,29 @@ UM_REGISTER_SINGLETON_MODULE(Permissions)
   return EXPermissionStatusDenied;
 }
 
-- (BOOL)hasGrantedPermission:(NSString *)permission forExperience:(NSString *)experienceId
+- (BOOL)hasGrantedPermission:(NSString *)permission forExperience:(NSString *)experienceScopeKey
 {
   if ([EXEnvironment sharedEnvironment].isDetached) {
     return YES;
   }
   
-  return [self getPermission:[EXPermissionsManager mapPermissionType:permission] forExperience:experienceId] == EXPermissionStatusGranted;
+  return [self getPermission:[EXPermissionsManager mapPermissionType:permission] forExperience:experienceScopeKey] == EXPermissionStatusGranted;
 }
 
-- (BOOL)savePermission:(NSDictionary *)permission ofType:(NSString *)type forExperience:(NSString *)experienceId
+- (BOOL)savePermission:(NSDictionary *)permission ofType:(NSString *)type forExperience:(NSString *)experienceScopeKey
 {
   type = [EXPermissionsManager mapPermissionType:type];
   
-  NSString *experienceIdKey = [EXPermissionsManager escapedResourceName:experienceId];
+  NSString *experienceScopeKeyKey = [EXPermissionsManager escapedResourceName:experienceScopeKey];
   NSMutableDictionary *experiencePermissions;
-  if ([_permissionsCache objectForKey:experienceIdKey] == nil) {
+  if ([_permissionsCache objectForKey:experienceScopeKeyKey] == nil) {
     experiencePermissions = [[NSMutableDictionary alloc] init];
   } else {
-    experiencePermissions = [[NSMutableDictionary alloc] initWithDictionary:_permissionsCache[experienceIdKey]];
+    experiencePermissions = [[NSMutableDictionary alloc] initWithDictionary:_permissionsCache[experienceScopeKeyKey]];
   }
 
   experiencePermissions[type] = permission;
-  _permissionsCache[experienceIdKey] = experiencePermissions;
+  _permissionsCache[experienceScopeKeyKey] = experiencePermissions;
   [self synchronizeWithPermissions:_permissionsCache];
   return YES;
 }

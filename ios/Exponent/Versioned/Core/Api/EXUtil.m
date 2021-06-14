@@ -15,9 +15,15 @@ EX_DEFINE_SCOPED_MODULE_GETTER(EXUtil, util)
 
 EX_EXPORT_SCOPED_MODULE(ExponentUtil, UtilService);
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId kernelServiceDelegate:(id<EXUtilService>)kernelServiceInstance params:(NSDictionary *)params
+- (instancetype)initWithExperienceStableLegacyId:(NSString *)experienceStableLegacyId
+                              experienceScopeKey:(NSString *)experienceScopeKey
+                           kernelServiceDelegate:(id<EXUtilService>)kernelServiceInstance
+                                          params:(NSDictionary *)params
 {
-  if (self = [super initWithExperienceId:experienceId kernelServiceDelegate:kernelServiceInstance params:params]) {
+  if (self = [super initWithExperienceStableLegacyId:experienceStableLegacyId
+                                  experienceScopeKey:experienceScopeKey
+                               kernelServiceDelegate:kernelServiceInstance
+                                              params:params]) {
     _kernelUtilService = kernelServiceInstance;
   }
   return self;

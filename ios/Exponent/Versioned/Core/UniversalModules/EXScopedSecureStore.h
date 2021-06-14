@@ -9,8 +9,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface EXScopedSecureStore : EXSecureStore
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId
-                 andConstantsBinding:(EXConstantsBinding *)constantsBinding;
+- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey
+                       andConstantsBinding:(EXConstantsBinding *)constantsBinding;
 
 @end
 

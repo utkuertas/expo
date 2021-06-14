@@ -26,17 +26,17 @@ RCT_ENUM_CONVERTER(WKContentMode, (@{
 
 @implementation RNCWebViewManager
 {
-  NSString *_experienceId;
+  NSString *_experienceScopeKey;
   NSConditionLock *_shouldStartLoadLock;
   BOOL _shouldStartLoad;
 }
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId
-               kernelServiceDelegate:(id)kernelServiceInstance
-                              params:(NSDictionary *)params
+- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey
+                     kernelServiceDelegate:(id)kernelServiceInstance
+                                    params:(NSDictionary *)params
 {
   if (self = [super init]) {
-    _experienceId = experienceId;
+    _experienceScopeKey = experienceScopeKey;
   }
   return self;
 }
@@ -48,7 +48,7 @@ RCT_ENUM_CONVERTER(WKContentMode, (@{
 #endif // !TARGET_OS_OSX
 {
   RNCWebView *webView = [RNCWebView new];
-  webView.experienceId = _experienceId;
+  webView.experienceScopeKey = _experienceScopeKey;
   webView.delegate = self;
   return webView;
 }

@@ -13,14 +13,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol EXUpdatesBindingDelegate
 
-- (EXUpdatesConfig *)configForExperienceId:(NSString *)experienceId;
-- (EXUpdatesSelectionPolicy *)selectionPolicyForExperienceId:(NSString *)experienceId;
-- (nullable EXUpdatesUpdate *)launchedUpdateForExperienceId:(NSString *)experienceId;
-- (nullable NSDictionary *)assetFilesMapForExperienceId:(NSString *)experienceId;
-- (BOOL)isUsingEmbeddedAssetsForExperienceId:(NSString *)experienceId;
-- (BOOL)isStartedForExperienceId:(NSString *)experienceId;
-- (BOOL)isEmergencyLaunchForExperienceId:(NSString *)experienceId;
-- (void)requestRelaunchForExperienceId:(NSString *)experienceId withCompletion:(EXUpdatesAppRelaunchCompletionBlock)completion;
+- (EXUpdatesConfig *)configForExperienceScopeKey:(NSString *)experienceScopeKey;
+- (EXUpdatesSelectionPolicy *)selectionPolicyForExperienceScopeKey:(NSString *)experienceScopeKey;
+- (nullable EXUpdatesUpdate *)launchedUpdateForExperienceScopeKey:(NSString *)experienceScopeKey;
+- (nullable NSDictionary *)assetFilesMapForExperienceScopeKey:(NSString *)experienceScopeKey;
+- (BOOL)isUsingEmbeddedAssetsForExperienceScopeKey:(NSString *)experienceScopeKey;
+- (BOOL)isStartedForExperienceScopeKey:(NSString *)experienceScopeKey;
+- (BOOL)isEmergencyLaunchForExperienceScopeKey:(NSString *)experienceScopeKey;
+- (void)requestRelaunchForExperienceScopeKey:(NSString *)experienceScopeKey withCompletion:(EXUpdatesAppRelaunchCompletionBlock)completion;
 
 @end
 
@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface EXUpdatesBinding : EXUpdatesService <UMInternalModule>
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId updatesKernelService:(id<EXUpdatesBindingDelegate>)updatesKernelService databaseKernelService:(id<EXUpdatesDatabaseBindingDelegate>)databaseKernelService;
+- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey updatesKernelService:(id<EXUpdatesBindingDelegate>)updatesKernelService databaseKernelService:(id<EXUpdatesDatabaseBindingDelegate>)databaseKernelService;
 
 @end
 

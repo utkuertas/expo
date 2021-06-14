@@ -175,10 +175,10 @@ NSString * const kEXReloadActiveAppRequest = @"EXReloadActiveAppRequest";
 
 - (BOOL)sendNotification:(EXPendingNotification *)notification
 {
-  EXKernelAppRecord *destinationApp = [_appRegistry standaloneAppRecord] ?: [_appRegistry newestRecordWithExperienceId:notification.experienceId];
+  EXKernelAppRecord *destinationApp = [_appRegistry standaloneAppRecord] ?: [_appRegistry newestRecordWithExperienceScopeKey:notification.experienceScopeKey];
 
   // This allows home app record to receive notification events as well.
-  if (!destinationApp && [_appRegistry.homeAppRecord.experienceId isEqualToString:notification.experienceId]) {
+  if (!destinationApp && [_appRegistry.homeAppRecord.experienceScopeKey isEqualToString:notification.experienceScopeKey]) {
     destinationApp = _appRegistry.homeAppRecord;
   }
 
@@ -192,7 +192,7 @@ NSString * const kEXReloadActiveAppRequest = @"EXReloadActiveAppRequest";
     // if we're Expo Go, we can query Home for a past experience in the user's history, and route the notification there.
     if (_browserController) {
       __weak typeof(self) weakSelf = self;
-      [_browserController getHistoryUrlForExperienceId:notification.experienceId completion:^(NSString *urlString) {
+      [_browserController getHistoryUrlForExperienceScopeKey:notification.experienceScopeKey completion:^(NSString *urlString) {
         if (urlString) {
           NSURL *url = [NSURL URLWithString:urlString];
           if (url) {
@@ -285,9 +285,9 @@ NSString * const kEXReloadActiveAppRequest = @"EXReloadActiveAppRequest";
   }
 }
 
-- (void)reloadAppWithExperienceId:(NSString *)experienceId
+- (void)reloadAppWithExperienceScopeKey:(NSString *)experienceScopeKey
 {
-  EXKernelAppRecord *appRecord = [_appRegistry newestRecordWithExperienceId:experienceId];
+  EXKernelAppRecord *appRecord = [_appRegistry newestRecordWithExperienceScopeKey:experienceScopeKey];
   if (_browserController) {
     [self createNewAppWithUrl:appRecord.appLoader.manifestUrl initialProps:nil];
   } else if (_appRegistry.standaloneAppRecord && appRecord == _appRegistry.standaloneAppRecord) {
@@ -295,9 +295,9 @@ NSString * const kEXReloadActiveAppRequest = @"EXReloadActiveAppRequest";
   }
 }
 
-- (void)reloadAppFromCacheWithExperienceId:(NSString *)experienceId
+- (void)reloadAppFromCacheWithExperienceScopeKey:(NSString *)experienceScopeKey
 {
-  EXKernelAppRecord *appRecord = [_appRegistry newestRecordWithExperienceId:experienceId];
+  EXKernelAppRecord *appRecord = [_appRegistry newestRecordWithExperienceScopeKey:experienceScopeKey];
   [appRecord.viewController reloadFromCache];
 }
 

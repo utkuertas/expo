@@ -64,7 +64,7 @@ NSString *kEXHomeManifestResourceName = @"kernel-manifest";
 
 - (void)addHistoryItemWithUrl:(NSURL *)manifestUrl manifest:(EXUpdatesRawManifest *)manifest
 {
-  if (!manifest || !manifestUrl || [manifest.rawID isEqualToString:@"@exponent/home"]) {
+  if (!manifest || !manifestUrl || [manifest.legacyId isEqualToString:@"@exponent/home"]) {
     return;
   }
   NSDictionary *params = @{
@@ -74,10 +74,10 @@ NSString *kEXHomeManifestResourceName = @"kernel-manifest";
   [self _dispatchHomeJSEvent:@"addHistoryItem" body:params onSuccess:nil onFailure:nil];
 }
 
-- (void)getHistoryUrlForExperienceId:(NSString *)experienceId completion:(void (^)(NSString *))completion
+- (void)getHistoryUrlForExperienceScopeKey:(NSString *)experienceScopeKey completion:(void (^)(NSString *))completion
 {
   [self _dispatchHomeJSEvent:@"getHistoryUrlForExperienceId"
-                        body:@{ @"experienceId": experienceId }
+                        body:@{ @"experienceId": experienceScopeKey }
                    onSuccess:^(NSDictionary *result) {
                      NSString *url = result[@"url"];
                      completion(url);

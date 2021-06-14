@@ -15,18 +15,18 @@
 
 @interface EXScopedSecureStore ()
 
-@property (strong, nonatomic) NSString *experienceId;
+@property (strong, nonatomic) NSString *experienceScopeKey;
 @property (nonatomic) BOOL isStandaloneApp;
 
 @end
 
 @implementation EXScopedSecureStore
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId
-                 andConstantsBinding:(EXConstantsBinding *)constantsBinding
+- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey
+                       andConstantsBinding:(EXConstantsBinding *)constantsBinding
 {
   if (self = [super init]) {
-    _experienceId = experienceId;
+    _experienceScopeKey = experienceScopeKey;
     _isStandaloneApp = ![@"expo" isEqualToString:constantsBinding.appOwnership];
   }
   return self;
@@ -37,7 +37,7 @@
     return nil;
   }
 
-  return _isStandaloneApp ? key : [NSString stringWithFormat:@"%@-%@", _experienceId, key];
+  return _isStandaloneApp ? key : [NSString stringWithFormat:@"%@-%@", _experienceScopeKey, key];
 }
 
 // We must override this method so that items saved in standalone apps on SDK 40 and below,
@@ -54,7 +54,7 @@
                                             encoding:NSUTF8StringEncoding];
     return value;
   } else if (_isStandaloneApp) {
-    NSString *scopedKey = [NSString stringWithFormat:@"%@-%@", _experienceId, key];
+    NSString *scopedKey = [NSString stringWithFormat:@"%@-%@", _experienceScopeKey, key];
     NSString *scopedValue = [self getValueWithScopedKey:scopedKey
                                              withOptions:options];
     if (scopedValue) {

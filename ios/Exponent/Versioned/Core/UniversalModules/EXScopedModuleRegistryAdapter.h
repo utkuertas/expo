@@ -4,6 +4,9 @@
 
 @interface EXScopedModuleRegistryAdapter : UMModuleRegistryAdapter
 
-- (UMModuleRegistry *)moduleRegistryForParams:(NSDictionary *)params forExperienceId:(NSString *)experienceId withKernelServices:(NSDictionary *)kernelServices;
+- (UMModuleRegistry *)moduleRegistryForParams:(NSDictionary *)params
+                  forExperienceStableLegacyId:(NSString *)experienceStableLegacyId
+                           experienceScopeKey:(NSString *)experienceScopeKey
+                           withKernelServices:(NSDictionary *)kernelServices;
 
 @end

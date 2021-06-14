@@ -17,10 +17,10 @@ NSNotificationName kEXChangeForegroundTaskSupportedOrientationsNotification = @"
   return self;
 }
 
-- (void)setSupportInterfaceOrientations:(UIInterfaceOrientationMask)supportedInterfaceOrientations forExperienceId:(NSString *)experienceId
+- (void)setSupportInterfaceOrientations:(UIInterfaceOrientationMask)supportedInterfaceOrientations forExperienceScopeKey:(nullable NSString *)scopeKey
 {
   EXKernelAppRegistry *appRegistry = [EXKernel sharedInstance].appRegistry;
-  EXKernelAppRecord *recordForId = [appRegistry newestRecordWithExperienceId:experienceId];
+  EXKernelAppRecord *recordForId = [appRegistry newestRecordWithExperienceScopeKey:scopeKey];
   if (recordForId) {
     [recordForId.viewController setSupportedInterfaceOrientations:supportedInterfaceOrientations];
   }
@@ -34,8 +34,8 @@ NSNotificationName kEXChangeForegroundTaskSupportedOrientationsNotification = @"
 
 - (void)handleScreenOrientationChange:(UITraitCollection *)traitCollection
 {
-  for(NSString *experienceId in _subscribedModules) {
-    id<EXScreenOrientationListener> subscribedModule = [_subscribedModules objectForKey:experienceId];
+  for(NSString *experienceScopeKey in _subscribedModules) {
+    id<EXScreenOrientationListener> subscribedModule = [_subscribedModules objectForKey:experienceScopeKey];
     [subscribedModule handleScreenOrientationChange:traitCollection];
   }
 }
@@ -51,18 +51,18 @@ NSNotificationName kEXChangeForegroundTaskSupportedOrientationsNotification = @"
 - (void)screenOrientationModule:(id)scopedOrientationModule
 didChangeSupportedInterfaceOrientations:(UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
-  [self setSupportInterfaceOrientations:supportedInterfaceOrientations forExperienceId:((EXScopedBridgeModule *)scopedOrientationModule).experienceId];
+  [self setSupportInterfaceOrientations:supportedInterfaceOrientations forExperienceScopeKey:((EXScopedBridgeModule *)scopedOrientationModule).experienceScopeKey];
 }
 
 
-- (void)removeOrientationChangeListener:(NSString *)experienceId
+- (void)removeOrientationChangeListenerForExperienceScopeKey:(NSString *)experienceScopeKey
 {
-  [_subscribedModules removeObjectForKey:experienceId];
+  [_subscribedModules removeObjectForKey:experienceScopeKey];
 }
 
-- (void)addOrientationChangeListener:(NSString *)experienceId subscriberModule:(id)subscriberModule
+- (void)addOrientationChangeListenerForExperienceScopeKey:(NSString *)experienceScopeKey subscriberModule:(id)subscriberModule
 {
-  [_subscribedModules setObject:subscriberModule forKey:experienceId];
+  [_subscribedModules setObject:subscriberModule forKey:experienceScopeKey];
 }
 
 @end

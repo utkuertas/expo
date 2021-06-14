@@ -9,7 +9,7 @@
 
 @interface RNCWKProcessPoolManager : NSObject
 
-+ (instancetype) sharedManager;
-- (WKProcessPool *)sharedProcessPoolForExperienceId:(NSString *)experienceId;
++ (instancetype)sharedManager;
+- (WKProcessPool *)sharedProcessPoolForExperienceScopeKey:(NSString *)experienceScopeKey;
 
 @end

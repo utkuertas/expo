@@ -9,6 +9,6 @@
 
 @interface EXTaskManager : UMExportedModule <UMInternalModule, UMEventEmitter, UMModuleRegistryConsumer, UMTaskManagerInterface>
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey NS_DESIGNATED_INITIALIZER;
 
 @end

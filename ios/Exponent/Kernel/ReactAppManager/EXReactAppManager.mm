@@ -121,12 +121,11 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
     Class bridgeClass = [self versionedClassFromString:@"RCTBridge"];
     Class rootViewClass = [self versionedClassFromString:@"RCTRootView"];
     
-    _versionManager = [[versionManagerClass alloc]
-                       initWithParams:[self extraParams]
-                       fatalHandler:handleFatalReactError
-                       logFunction:[self logFunction]
-                       logThreshold:[self logLevel]
-                       ];
+    _versionManager = [[versionManagerClass alloc] initWithParams:[self extraParams]
+                                                         manifest:_appRecord.appLoader.manifest
+                                                     fatalHandler:handleFatalReactError
+                                                      logFunction:[self logFunction]
+                                                     logThreshold:[self logLevel]];
     _reactBridge = [[bridgeClass alloc] initWithDelegate:self launchOptions:[self launchOptionsForBridge]];
 
     if (!_isHeadless) {
@@ -150,7 +149,6 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
   // we allow the vanilla RN dev menu in some circumstances.
   BOOL isStandardDevMenuAllowed = [EXEnvironment sharedEnvironment].isDetached;
   NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{
-    @"manifest": _appRecord.appLoader.manifest.rawManifestJSON,
     @"constants": @{
         @"linkingUri": RCTNullIfNil([EXKernelLinkingManager linkingUriForExperienceUri:_appRecord.appLoader.manifestUrl useLegacy:[self _compareVersionTo:27] == NSOrderedAscending]),
         @"experienceUrl": RCTNullIfNil(_appRecord.appLoader.manifestUrl? _appRecord.appLoader.manifestUrl.absoluteString: nil),
@@ -281,7 +279,7 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
     NSLog(@"Standalone bundle remote url is %@", [EXEnvironment sharedEnvironment].standaloneManifestUrl);
     return kEXEmbeddedBundleResourceName;
   } else {
-    return manifest.rawID;
+    return manifest.legacyId;
   }
 }
 
@@ -300,8 +298,8 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
 - (void)loadSourceForBridge:(RCTBridge *)bridge withBlock:(RCTSourceLoadBlock)loadCallback
 {
   // clear any potentially old loading state
-  if (_appRecord.experienceId) {
-    [[EXKernel sharedInstance].serviceRegistry.errorRecoveryManager setError:nil forExperienceId:_appRecord.experienceId];
+  if (_appRecord.experienceScopeKey) {
+    [[EXKernel sharedInstance].serviceRegistry.errorRecoveryManager setError:nil forExperienceScopeKey:_appRecord.experienceScopeKey];
   }
   [self _stopObservingBridgeNotifications];
   [self _startObservingBridgeNotificationsForBridge:bridge];
@@ -310,8 +308,8 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
     if ([_appRecord.appLoader supportsBundleReload]) {
       [_appRecord.appLoader forceBundleReload];
     } else {
-      NSAssert(_appRecord.experienceId, @"EXKernelAppRecord.experienceId should be nonnull if we have a manifest with developer tools enabled");
-      [[EXKernel sharedInstance] reloadAppWithExperienceId:_appRecord.experienceId];
+      NSAssert(_appRecord.experienceScopeKey, @"EXKernelAppRecord.experienceScopeKey should be nonnull if we have a manifest with developer tools enabled");
+      [[EXKernel sharedInstance] reloadAppWithExperienceScopeKey:_appRecord.experienceScopeKey];
     }
   }
   
@@ -347,8 +345,8 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
 {
   // RN is going to call RCTFatal() on this error, so keep a reference to it for later
   // so we can distinguish this non-fatal error from actual fatal cases.
-  if (_appRecord.experienceId) {
-    [[EXKernel sharedInstance].serviceRegistry.errorRecoveryManager setError:error forExperienceId:_appRecord.experienceId];
+  if (_appRecord.experienceScopeKey) {
+    [[EXKernel sharedInstance].serviceRegistry.errorRecoveryManager setError:error forExperienceScopeKey:_appRecord.experienceScopeKey];
   }
   
   // react won't post this for us
@@ -433,8 +431,8 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
     }
   } else if ([notification.name isEqualToString:[self versionedString:RCTJavaScriptDidFailToLoadNotification]]) {
     NSError *error = (notification.userInfo) ? notification.userInfo[@"error"] : nil;
-    if (_appRecord.experienceId) {
-      [[EXKernel sharedInstance].serviceRegistry.errorRecoveryManager setError:error forExperienceId:_appRecord.experienceId];
+    if (_appRecord.experienceScopeKey) {
+      [[EXKernel sharedInstance].serviceRegistry.errorRecoveryManager setError:error forExperienceScopeKey:_appRecord.experienceScopeKey];
     }
 
     UM_WEAKIFY(self);
@@ -548,8 +546,8 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
   UM_WEAKIFY(self);
   dispatch_async(dispatch_get_main_queue(), ^{
     UM_ENSURE_STRONGIFY(self);
-    if (self.appRecord.experienceId) {
-      [[EXKernel sharedInstance].serviceRegistry.errorRecoveryManager experienceFinishedLoadingWithId:self.appRecord.experienceId];
+    if (self.appRecord.experienceScopeKey) {
+      [[EXKernel sharedInstance].serviceRegistry.errorRecoveryManager experienceFinishedLoadingWithScopeKey:self.appRecord.experienceScopeKey];
     }
     [self.delegate reactAppManagerFinishedLoadingJavaScript:self];
   });
@@ -758,10 +756,10 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
   NSMutableDictionary *props = [NSMutableDictionary dictionary];
   NSMutableDictionary *expProps = [NSMutableDictionary dictionary];
 
-  NSAssert(_appRecord.experienceId, @"Experience id should be nonnull when getting initial properties for root view");
+  NSAssert(_appRecord.experienceScopeKey, @"Experience id should be nonnull when getting initial properties for root view");
 
-  NSDictionary *errorRecoveryProps = [[EXKernel sharedInstance].serviceRegistry.errorRecoveryManager developerInfoForExperienceId:_appRecord.experienceId];
-  if ([[EXKernel sharedInstance].serviceRegistry.errorRecoveryManager experienceIdIsRecoveringFromError:_appRecord.experienceId]) {
+  NSDictionary *errorRecoveryProps = [[EXKernel sharedInstance].serviceRegistry.errorRecoveryManager developerInfoForExperienceScopeKey:_appRecord.experienceScopeKey];
+  if ([[EXKernel sharedInstance].serviceRegistry.errorRecoveryManager experienceScopeKeyIsRecoveringFromError:_appRecord.experienceScopeKey]) {
     [[EXKernel sharedInstance].serviceRegistry.errorRecoveryManager increaseAutoReloadBuffer];
     if (errorRecoveryProps) {
       expProps[@"errorRecovery"] = errorRecoveryProps;
@@ -773,7 +771,7 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
   if (_initialProps) {
     [expProps addEntriesFromDictionary:_initialProps];
   }
-  EXPendingNotification *initialNotification = [[EXKernel sharedInstance].serviceRegistry.notificationsManager initialNotificationForExperience:_appRecord.experienceId];
+  EXPendingNotification *initialNotification = [[EXKernel sharedInstance].serviceRegistry.notificationsManager initialNotification];
   if (initialNotification) {
     expProps[@"notification"] = initialNotification.properties;
   }
@@ -816,18 +814,18 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
 
 - (NSString *)scopedDocumentDirectory
 {
-  NSString *escapedExperienceId = [self escapedResourceName:_appRecord.experienceId];
+  NSString *escapedExperienceScopeKey = [self escapedResourceName:_appRecord.experienceScopeKey];
   NSString *mainDocumentDirectory = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
   NSString *exponentDocumentDirectory = [mainDocumentDirectory stringByAppendingPathComponent:@"ExponentExperienceData"];
-  return [[exponentDocumentDirectory stringByAppendingPathComponent:escapedExperienceId] stringByStandardizingPath];
+  return [[exponentDocumentDirectory stringByAppendingPathComponent:escapedExperienceScopeKey] stringByStandardizingPath];
 }
 
 - (NSString *)scopedCachesDirectory
 {
-  NSString *escapedExperienceId = [self escapedResourceName:_appRecord.experienceId];
+  NSString *escapedExperienceScopeKey = [self escapedResourceName:_appRecord.experienceScopeKey];
   NSString *mainCachesDirectory = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
   NSString *exponentCachesDirectory = [mainCachesDirectory stringByAppendingPathComponent:@"ExponentExperienceData"];
-  return [[exponentCachesDirectory stringByAppendingPathComponent:escapedExperienceId] stringByStandardizingPath];
+  return [[exponentCachesDirectory stringByAppendingPathComponent:escapedExperienceScopeKey] stringByStandardizingPath];
 }
 
 - (void *)jsExecutorFactoryForBridge:(id)bridge

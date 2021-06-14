@@ -5,7 +5,7 @@
 
 @interface EXScopedErrorRecoveryModule : EXErrorRecoveryModule
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId;
+- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey;
 
 @end
 
