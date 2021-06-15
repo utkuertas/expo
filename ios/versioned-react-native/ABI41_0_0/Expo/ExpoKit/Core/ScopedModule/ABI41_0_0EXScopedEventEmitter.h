@@ -4,18 +4,18 @@
 
 @interface ABI41_0_0EXScopedEventEmitter : ABI41_0_0RCTEventEmitter
 
-+ (NSString *)getExperienceIdFromEventEmitter:(id)eventEmitter;
++ (NSString *)getExperienceScopeKeyFromEventEmitter:(id)eventEmitter;
 
 - (instancetype)init NS_UNAVAILABLE;
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId
-               kernelServiceDelegate:(id)kernelServiceInstance
-                              params:(NSDictionary *)params NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey
+                     kernelServiceDelegate:(id)kernelServiceInstance
+                                    params:(NSDictionary *)params NS_DESIGNATED_INITIALIZER;
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId
-              kernelServiceDelegates:(NSDictionary *)kernelServiceInstances
-                              params:(NSDictionary *)params NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey
+                    kernelServiceDelegates:(NSDictionary *)kernelServiceInstances
+                                    params:(NSDictionary *)params NS_DESIGNATED_INITIALIZER;
 
-@property (nonatomic, readonly) NSString *experienceId;
+@property (nonatomic, readonly) NSString *experienceScopeKey;
 
 @end

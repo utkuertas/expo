@@ -11,6 +11,6 @@
 
 + (instancetype) sharedManager;
 - (WKProcessPool *)sharedProcessPool;
-- (WKProcessPool *)sharedProcessPoolForExperienceId:(NSString *)experienceId;
+- (WKProcessPool *)sharedProcessPoolForExperienceScopeKey:(NSString *)experienceScopeKey;
 
 @end

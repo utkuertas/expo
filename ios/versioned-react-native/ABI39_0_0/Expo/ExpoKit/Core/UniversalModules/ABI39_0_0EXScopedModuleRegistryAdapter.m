@@ -36,24 +36,28 @@
 
 @implementation ABI39_0_0EXScopedModuleRegistryAdapter
 
-- (ABI39_0_0UMModuleRegistry *)moduleRegistryForParams:(NSDictionary *)params forExperienceId:(NSString *)experienceId withKernelServices:(NSDictionary *)kernelServices
+- (ABI39_0_0UMModuleRegistry *)moduleRegistryForParams:(NSDictionary *)params
+                  forExperienceStableLegacyId:(NSString *)experienceStableLegacyId
+                           experienceScopeKey:(NSString *)experienceScopeKey
+                           withKernelServices:(NSDictionary *)kernelServices
 {
   ABI39_0_0UMModuleRegistry *moduleRegistry = [self.moduleRegistryProvider moduleRegistry];
 
 #if __has_include(<ABI39_0_0EXUpdates/ABI39_0_0EXUpdatesService.h>)
-  ABI39_0_0EXUpdatesBinding *updatesBinding = [[ABI39_0_0EXUpdatesBinding alloc] initWithExperienceId:experienceId updatesKernelService:kernelServices[@"EXUpdatesManager"] databaseKernelService:kernelServices[@"EXUpdatesDatabaseManager"]];
+  ABI39_0_0EXUpdatesBinding *updatesBinding = [[ABI39_0_0EXUpdatesBinding alloc] initWithExperienceScopeKey:experienceScopeKey
+                                                                     updatesKernelService:kernelServices[@"EXUpdatesManager"] databaseKernelService:kernelServices[@"EXUpdatesDatabaseManager"]];
   [moduleRegistry registerInternalModule:updatesBinding];
 #endif
 
 #if __has_include(<ABI39_0_0EXConstants/ABI39_0_0EXConstantsService.h>)
-  ABI39_0_0EXConstantsBinding *constantsBinding = [[ABI39_0_0EXConstantsBinding alloc] initWithExperienceId:experienceId andParams:params deviceInstallationUUIDManager:kernelServices[@"EXDeviceInstallationUUIDService"]];
+  ABI39_0_0EXConstantsBinding *constantsBinding = [[ABI39_0_0EXConstantsBinding alloc] initWithParams:params deviceInstallationUUIDManager:kernelServices[@"EXDeviceInstallationUUIDService"]];
   [moduleRegistry registerInternalModule:constantsBinding];
 #endif
 
 #if __has_include(<ABI39_0_0EXFacebook/ABI39_0_0EXFacebook.h>)
   // only override in Expo Go
   if ([params[@"constants"][@"appOwnership"] isEqualToString:@"expo"]) {
-    ABI39_0_0EXScopedFacebook *scopedFacebook = [[ABI39_0_0EXScopedFacebook alloc] initWithExperienceId:experienceId andParams:params];
+    ABI39_0_0EXScopedFacebook *scopedFacebook = [[ABI39_0_0EXScopedFacebook alloc] initWithExperienceScopeKey:experienceScopeKey andParams:params:params];
     [moduleRegistry registerExportedModule:scopedFacebook];
   }
 #endif
@@ -79,7 +83,7 @@
 #endif
 
 #if __has_include(<ABI39_0_0EXSensors/ABI39_0_0EXSensorsManager.h>)
-  ABI39_0_0EXSensorsManagerBinding *sensorsManagerBinding = [[ABI39_0_0EXSensorsManagerBinding alloc] initWithExperienceId:experienceId andKernelService:kernelServices[@"EXSensorManager"]];
+  ABI39_0_0EXSensorsManagerBinding *sensorsManagerBinding = [[ABI39_0_0EXSensorsManagerBinding alloc] initWithExperienceScopeKey:experienceScopeKey andKernelService:kernelServices[@"EXSensorManager"]];
   [moduleRegistry registerInternalModule:sensorsManagerBinding];
 #endif
 
@@ -95,17 +99,17 @@
 #endif
 
 #if __has_include(<ABI39_0_0EXSecureStore/ABI39_0_0EXSecureStore.h>)
-  ABI39_0_0EXScopedSecureStore *secureStoreModule = [[ABI39_0_0EXScopedSecureStore alloc] initWithExperienceId:experienceId];
+  ABI39_0_0EXScopedSecureStore *secureStoreModule = [[ABI39_0_0EXScopedSecureStore alloc] initWithExperienceScopeKey:experienceScopeKey];
   [moduleRegistry registerExportedModule:secureStoreModule];
 #endif
 
 #if __has_include(<ABI39_0_0EXAmplitude/ABI39_0_0EXAmplitude.h>)
-  ABI39_0_0EXScopedAmplitude *amplitudeModule = [[ABI39_0_0EXScopedAmplitude alloc] initWithExperienceId:experienceId];
+  ABI39_0_0EXScopedAmplitude *amplitudeModule = [[ABI39_0_0EXScopedAmplitude alloc] initWithExperienceStableLegacyId:experienceStableLegacyId];
   [moduleRegistry registerExportedModule:amplitudeModule];
 #endif
 
 #if __has_include(<ABI39_0_0EXPermissions/ABI39_0_0EXPermissions.h>)
-  ABI39_0_0EXScopedPermissions *permissionsModule = [[ABI39_0_0EXScopedPermissions alloc] initWithExperienceId:experienceId andConstantsBinding:constantsBinding];
+  ABI39_0_0EXScopedPermissions *permissionsModule = [[ABI39_0_0EXScopedPermissions alloc] initWithExperienceScopeKey:experienceScopeKey andConstantsBinding:constantsBinding];
   [moduleRegistry registerExportedModule:permissionsModule];
   [moduleRegistry registerInternalModule:permissionsModule];
 #endif
@@ -116,7 +120,7 @@
 #endif
 
 #if __has_include(<ABI39_0_0EXBranch/ABI39_0_0RNBranch.h>)
-  ABI39_0_0EXScopedBranch *branchModule = [[ABI39_0_0EXScopedBranch alloc] initWithExperienceId:experienceId];
+  ABI39_0_0EXScopedBranch *branchModule = [[ABI39_0_0EXScopedBranch alloc] initWithExperienceScopeKey:experienceScopeKey];
   [moduleRegistry registerInternalModule:branchModule];
 #endif
 
@@ -127,49 +131,49 @@
 
 #if __has_include(<ABI39_0_0EXTaskManager/ABI39_0_0EXTaskManager.h>)
   // TODO: Make scoped task manager when adding support for bare ABI39_0_0React Native
-  ABI39_0_0EXTaskManager *taskManagerModule = [[ABI39_0_0EXTaskManager alloc] initWithExperienceId:experienceId];
+  ABI39_0_0EXTaskManager *taskManagerModule = [[ABI39_0_0EXTaskManager alloc] initWithExperienceScopeKey:experienceScopeKey];
   [moduleRegistry registerInternalModule:taskManagerModule];
   [moduleRegistry registerExportedModule:taskManagerModule];
 #endif
-  
+
 #if __has_include(<ABI39_0_0EXErrorRecovery/ABI39_0_0EXErrorRecoveryModule.h>)
-  ABI39_0_0EXScopedErrorRecoveryModule *errorRecovery = [[ABI39_0_0EXScopedErrorRecoveryModule alloc] initWithExperienceId:experienceId];
+  ABI39_0_0EXScopedErrorRecoveryModule *errorRecovery = [[ABI39_0_0EXScopedErrorRecoveryModule alloc] initWithExperienceScopeKey:experienceScopeKey];
   [moduleRegistry registerExportedModule:errorRecovery];
 #endif
-  
+
 #if __has_include(<ABI39_0_0EXFirebaseCore/ABI39_0_0EXFirebaseCore.h>)
-  ABI39_0_0EXScopedFirebaseCore *firebaseCoreModule = [[ABI39_0_0EXScopedFirebaseCore alloc] initWithExperienceId:experienceId andConstantsBinding:constantsBinding];
+  ABI39_0_0EXScopedFirebaseCore *firebaseCoreModule = [[ABI39_0_0EXScopedFirebaseCore alloc] initWithExperienceScopeKey:experienceScopeKey andConstantsBinding:constantsBinding];
   [moduleRegistry registerExportedModule:firebaseCoreModule];
   [moduleRegistry registerInternalModule:firebaseCoreModule];
 #endif
 
 #if __has_include(<ABI39_0_0EXNotifications/ABI39_0_0EXNotificationsEmitter.h>)
-  ABI39_0_0EXScopedNotificationsEmitter *notificationsEmmitter = [[ABI39_0_0EXScopedNotificationsEmitter alloc] initWithExperienceId:experienceId];
+  ABI39_0_0EXScopedNotificationsEmitter *notificationsEmmitter = [[ABI39_0_0EXScopedNotificationsEmitter alloc] initWithExperienceScopeKey:experienceScopeKey];
   [moduleRegistry registerExportedModule:notificationsEmmitter];
 #endif
-  
+
 #if __has_include(<ABI39_0_0EXNotifications/ABI39_0_0EXNotificationsHandlerModule.h>)
-  ABI39_0_0EXScopedNotificationsHandlerModule *notificationsHandler = [[ABI39_0_0EXScopedNotificationsHandlerModule alloc] initWithExperienceId:experienceId];
+  ABI39_0_0EXScopedNotificationsHandlerModule *notificationsHandler = [[ABI39_0_0EXScopedNotificationsHandlerModule alloc] initWithExperienceScopeKey:experienceScopeKey];
   [moduleRegistry registerExportedModule:notificationsHandler];
 #endif
-  
+
 #if __has_include(<ABI39_0_0EXNotifications/ABI39_0_0EXNotificationsHandlerModule.h>)
-  ABI39_0_0EXScopedNotificationBuilder *notificationsBuilder = [[ABI39_0_0EXScopedNotificationBuilder alloc] initWithExperienceId:experienceId];
+  ABI39_0_0EXScopedNotificationBuilder *notificationsBuilder = [[ABI39_0_0EXScopedNotificationBuilder alloc] initWithExperienceScopeKey:experienceScopeKey];
   [moduleRegistry registerInternalModule:notificationsBuilder];
 #endif
-  
+
 #if __has_include(<ABI39_0_0EXNotifications/ABI39_0_0EXNotificationSchedulerModule.h>)
-  ABI39_0_0EXScopedNotificationSchedulerModule *schedulerModule = [[ABI39_0_0EXScopedNotificationSchedulerModule alloc] initWithExperienceId:experienceId];
+  ABI39_0_0EXScopedNotificationSchedulerModule *schedulerModule = [[ABI39_0_0EXScopedNotificationSchedulerModule alloc] initWithExperienceScopeKey:experienceScopeKey];
   [moduleRegistry registerExportedModule:schedulerModule];
 #endif
-    
+
 #if __has_include(<ABI39_0_0EXNotifications/ABI39_0_0EXNotificationPresentationModule.h>)
-  ABI39_0_0EXScopedNotificationPresentationModule *notificationPresentationModule = [[ABI39_0_0EXScopedNotificationPresentationModule alloc] initWithExperienceId:experienceId];
+  ABI39_0_0EXScopedNotificationPresentationModule *notificationPresentationModule = [[ABI39_0_0EXScopedNotificationPresentationModule alloc] initWithExperienceScopeKey:experienceScopeKey];
   [moduleRegistry registerExportedModule:notificationPresentationModule];
 #endif
-  
+
 #if __has_include(<ABI39_0_0EXNotifications/ABI39_0_0EXNotificationCategoriesModule.h>)
-  ABI39_0_0EXScopedNotificationCategoriesModule *categoriesModule = [[ABI39_0_0EXScopedNotificationCategoriesModule alloc] initWithExperienceId:experienceId];
+  ABI39_0_0EXScopedNotificationCategoriesModule *categoriesModule = [[ABI39_0_0EXScopedNotificationCategoriesModule alloc] initWithExperienceScopeKey:experienceScopeKey];
   [moduleRegistry registerExportedModule:categoriesModule];
 #endif
   return moduleRegistry;

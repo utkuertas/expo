@@ -13,14 +13,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol ABI40_0_0EXUpdatesBindingDelegate
 
-- (ABI40_0_0EXUpdatesConfig *)configForExperienceId:(NSString *)experienceId;
-- (ABI40_0_0EXUpdatesSelectionPolicy *)selectionPolicyForExperienceId:(NSString *)experienceId;
-- (nullable ABI40_0_0EXUpdatesUpdate *)launchedUpdateForExperienceId:(NSString *)experienceId;
-- (nullable NSDictionary *)assetFilesMapForExperienceId:(NSString *)experienceId;
-- (BOOL)isUsingEmbeddedAssetsForExperienceId:(NSString *)experienceId;
-- (BOOL)isStartedForExperienceId:(NSString *)experienceId;
-- (BOOL)isEmergencyLaunchForExperienceId:(NSString *)experienceId;
-- (void)requestRelaunchForExperienceId:(NSString *)experienceId withCompletion:(ABI40_0_0EXUpdatesAppRelaunchCompletionBlock)completion;
+- (ABI40_0_0EXUpdatesConfig *)configForExperienceScopeKey:(NSString *)experienceScopeKey;
+- (ABI40_0_0EXUpdatesSelectionPolicy *)selectionPolicyForExperienceScopeKey:(NSString *)experienceScopeKey;
+- (nullable ABI40_0_0EXUpdatesUpdate *)launchedUpdateForExperienceScopeKey:(NSString *)experienceScopeKey;
+- (nullable NSDictionary *)assetFilesMapForExperienceScopeKey:(NSString *)experienceScopeKey;
+- (BOOL)isUsingEmbeddedAssetsForExperienceScopeKey:(NSString *)experienceScopeKey;
+- (BOOL)isStartedForExperienceScopeKey:(NSString *)experienceScopeKey;
+- (BOOL)isEmergencyLaunchForExperienceScopeKey:(NSString *)experienceScopeKey;
+- (void)requestRelaunchForExperienceScopeKey:(NSString *)experienceScopeKey withCompletion:(ABI40_0_0EXUpdatesAppRelaunchCompletionBlock)completion;
 
 @end
 
@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ABI40_0_0EXUpdatesBinding : ABI40_0_0EXUpdatesService <ABI40_0_0UMInternalModule>
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId updatesKernelService:(id<ABI40_0_0EXUpdatesBindingDelegate>)updatesKernelService databaseKernelService:(id<ABI40_0_0EXUpdatesDatabaseBindingDelegate>)databaseKernelService;
+- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey updatesKernelService:(id<ABI40_0_0EXUpdatesBindingDelegate>)updatesKernelService databaseKernelService:(id<ABI40_0_0EXUpdatesDatabaseBindingDelegate>)databaseKernelService;
 
 @end
 

@@ -8,36 +8,36 @@
 
 @interface ABI39_0_0EXScopedNotificationsEmitter ()
 
-@property (nonatomic, strong) NSString *experienceId;
+@property (nonatomic, strong) NSString *experienceScopeKey;
 
 @end
 
 @implementation ABI39_0_0EXScopedNotificationsEmitter
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId
+- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey
 {
   if (self = [super init]) {
-    _experienceId = experienceId;
+    _experienceScopeKey = experienceScopeKey;
   }
-  
+
   return self;
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler
 {
-  if ([ABI39_0_0EXScopedNotificationsUtils shouldNotification:response.notification beHandledByExperience:_experienceId]) {
+  if ([ABI39_0_0EXScopedNotificationsUtils shouldNotification:response.notification beHandledByExperience:_experienceScopeKey]) {
     [self.eventEmitter sendEventWithName:onDidReceiveNotificationResponse body:[ABI39_0_0EXScopedNotificationSerializer serializedNotificationResponse:response]];
   }
-  
+
   completionHandler();
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 {
-  if ([ABI39_0_0EXScopedNotificationsUtils shouldNotification:notification beHandledByExperience:_experienceId]) {
+  if ([ABI39_0_0EXScopedNotificationsUtils shouldNotification:notification beHandledByExperience:_experienceScopeKey]) {
     [self.eventEmitter sendEventWithName:onDidReceiveNotification body:[ABI39_0_0EXScopedNotificationSerializer serializedNotification:notification]];
   }
-  
+
   completionHandler(UNNotificationPresentationOptionNone);
 }
 

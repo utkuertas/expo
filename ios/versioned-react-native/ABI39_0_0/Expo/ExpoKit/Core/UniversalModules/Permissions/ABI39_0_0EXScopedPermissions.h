@@ -9,14 +9,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol ABI39_0_0EXPermissionsScopedModuleDelegate
 
-- (ABI39_0_0UMPermissionStatus)getPermission:(NSString *)permissionType forExperience:(NSString *)experienceId;
-- (BOOL)savePermission:(NSDictionary *)permission ofType:(NSString *)type forExperience:(NSString *)experienceId;
+- (ABI39_0_0UMPermissionStatus)getPermission:(NSString *)permissionType forExperience:(NSString *)experienceScopeKey;
+- (BOOL)savePermission:(NSDictionary *)permission ofType:(NSString *)type forExperience:(NSString *)experienceScopeKey;
 
 @end
 
 @interface ABI39_0_0EXScopedPermissions : ABI39_0_0EXPermissions
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId andConstantsBinding:(ABI39_0_0EXConstantsBinding *)constantsBinding;
+- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey andConstantsBinding:(ABI39_0_0EXConstantsBinding *)constantsBinding;
 
 @end
 

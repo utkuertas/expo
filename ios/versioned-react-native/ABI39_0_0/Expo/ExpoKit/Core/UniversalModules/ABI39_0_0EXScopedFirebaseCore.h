@@ -9,7 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ABI39_0_0EXScopedFirebaseCore : ABI39_0_0EXFirebaseCore
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId andConstantsBinding:(ABI39_0_0EXConstantsBinding *)constantsBinding;
+- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey andConstantsBinding:(ABI39_0_0EXConstantsBinding *)constantsBinding;
 
 @end
 

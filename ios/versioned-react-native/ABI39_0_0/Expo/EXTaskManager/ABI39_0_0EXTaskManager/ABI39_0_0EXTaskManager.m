@@ -33,14 +33,14 @@ ABI39_0_0UM_EXPORT_MODULE(ExpoTaskManager);
 
 - (instancetype)init
 {
-  return [self initWithExperienceId:@"mainApplication"];
+  return [self initWithExperienceScopeKey:@"mainApplication"];
 }
 
 // TODO: Remove when adding bare ABI39_0_0React Native support
-- (instancetype)initWithExperienceId:(NSString *)experienceId
+- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey
 {
   if (self = [super init]) {
-    _appId = experienceId;
+    _appId = experienceScopeKey;
     _eventsQueue = [NSMutableArray new];
   }
   return self;

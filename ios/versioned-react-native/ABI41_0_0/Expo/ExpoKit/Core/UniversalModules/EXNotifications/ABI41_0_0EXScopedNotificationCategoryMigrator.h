@@ -5,7 +5,8 @@
 
 @interface ABI41_0_0EXScopedNotificationCategoryMigrator : NSObject <ABI41_0_0EXNotificationsDelegate>
 
-+ (void)unscopeLegacyCategoryIdentifiersForProject:(NSString *)experienceId;
-+ (void)migrateLegacyScopedCategoryIdentifiersForProject:(NSString *)experienceId;
++ (void)unscopeLegacyCategoryIdentifiersForProjectWithExperienceStableLegacyId:(NSString *)experienceStableLegacyId
+                                                            experienceScopeKey:(NSString *)experienceScopeKey;
++ (void)migrateLegacyScopedCategoryIdentifiersForProjectWithExperienceStableLegacyId:(NSString *)experienceStableLegacyId;
 
 @end

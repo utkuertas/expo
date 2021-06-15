@@ -4,16 +4,16 @@
 
 @interface ABI40_0_0EXScopedNotificationCategoriesModule ()
 
-@property (nonatomic, strong) NSString *experienceId;
+@property (nonatomic, strong) NSString *experienceScopeKey;
 
 @end
 
 @implementation ABI40_0_0EXScopedNotificationCategoriesModule
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId
+- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey
 {
   if (self = [super init]) {
-    _experienceId = experienceId;
+    _experienceScopeKey = experienceScopeKey;
   }
   return self;
 }
@@ -23,7 +23,7 @@
   [[UNUserNotificationCenter currentNotificationCenter] getNotificationCategoriesWithCompletionHandler:^(NSSet<UNNotificationCategory *> *categories) {
     NSMutableArray* existingCategories = [NSMutableArray new];
     for (UNNotificationCategory *category in categories) {
-      if ([category.identifier hasPrefix:self->_experienceId]) {
+      if ([category.identifier hasPrefix:self->_experienceScopeKey]) {
         [existingCategories addObject:[self serializeCategory:category]];
       }
     }
@@ -34,25 +34,25 @@
 - (void)setNotificationCategoryWithCategoryId:(NSString *)categoryId
                                       actions:(NSArray *)actions
                                       options:(NSDictionary *)options
-                                      resolve:(ABI40_0_0UMPromiseResolveBlock)resolve 
+                                      resolve:(ABI40_0_0UMPromiseResolveBlock)resolve
                                        reject:(ABI40_0_0UMPromiseRejectBlock)reject
 {
-  NSString *scopedCategoryIdentifier = [NSString stringWithFormat:@"%@-%@", _experienceId, categoryId];
+  NSString *scopedCategoryIdentifier = [NSString stringWithFormat:@"%@-%@", _experienceScopeKey, categoryId];
   [super setNotificationCategoryWithCategoryId:scopedCategoryIdentifier actions:actions options:options resolve:resolve reject:reject];
 }
 
 - (void)deleteNotificationCategoryWithCategoryId:(NSString *)categoryId
-                                         resolve:(ABI40_0_0UMPromiseResolveBlock)resolve 
+                                         resolve:(ABI40_0_0UMPromiseResolveBlock)resolve
                                           reject:(ABI40_0_0UMPromiseRejectBlock)reject
 {
-  NSString *scopedCategoryIdentifier = [NSString stringWithFormat:@"%@-%@", _experienceId, categoryId];
+  NSString *scopedCategoryIdentifier = [NSString stringWithFormat:@"%@-%@", _experienceScopeKey, categoryId];
   [super deleteNotificationCategoryWithCategoryId:scopedCategoryIdentifier resolve:resolve reject:reject];
 }
 
 - (NSMutableDictionary *)serializeCategory:(UNNotificationCategory *)category
 {
   NSMutableDictionary* serializedCategory = [NSMutableDictionary dictionary];
-  NSString* experienceIdPrefix = [NSString stringWithFormat:@"%@-", _experienceId];
+  NSString* experienceIdPrefix = [NSString stringWithFormat:@"%@-", _experienceScopeKey];
   serializedCategory[@"identifier"] = [category.identifier stringByReplacingOccurrencesOfString:experienceIdPrefix withString:@""];
   serializedCategory[@"actions"] = [super serializeActions: category.actions];
   serializedCategory[@"options"] = [super serializeCategoryOptions: category];

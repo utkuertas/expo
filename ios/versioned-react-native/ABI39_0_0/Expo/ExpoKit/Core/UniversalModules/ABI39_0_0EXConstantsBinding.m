@@ -6,7 +6,6 @@
 @interface ABI39_0_0EXConstantsBinding ()
 
 @property (nonatomic, strong) NSString *appOwnership;
-@property (nonatomic, strong) NSString *experienceId;
 @property (nonatomic, strong) NSDictionary *unversionedConstants;
 
 @property (nonatomic, weak) id<ABI39_0_0EXConstantsDeviceInstallationUUIDManager> deviceInstallationUUIDManager;
@@ -15,10 +14,9 @@
 
 @implementation ABI39_0_0EXConstantsBinding : ABI39_0_0EXConstantsService
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId andParams:(NSDictionary *)params deviceInstallationUUIDManager:(id<ABI39_0_0EXConstantsDeviceInstallationUUIDManager>)deviceInstallationUUIDManager
+- (instancetype)initWithParams:(NSDictionary *)params deviceInstallationUUIDManager:(id<ABI39_0_0EXConstantsDeviceInstallationUUIDManager>)deviceInstallationUUIDManager
 {
   if (self = [super init]) {
-    _experienceId = experienceId;
     _unversionedConstants = params[@"constants"];
     _deviceInstallationUUIDManager = deviceInstallationUUIDManager;
     if (_unversionedConstants && _unversionedConstants[@"appOwnership"]) {
@@ -40,7 +38,7 @@
 #endif
 
   constants[@"isDetached"] = @(isDetached);
-  
+
   if (_unversionedConstants) {
     [constants addEntriesFromDictionary:_unversionedConstants];
   }

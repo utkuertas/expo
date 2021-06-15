@@ -8,7 +8,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ABI39_0_0EXScopedNotificationPresentationModule : ABI39_0_0EXNotificationPresentationModule
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId;
+- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey;
 
 @end
 

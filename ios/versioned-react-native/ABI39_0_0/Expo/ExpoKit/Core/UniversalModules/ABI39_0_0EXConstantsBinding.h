@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSString *appOwnership;
 
-- (instancetype)initWithExperienceId:(NSString *)experienceId andParams:(NSDictionary *)params deviceInstallationUUIDManager:(id<ABI39_0_0EXConstantsDeviceInstallationUUIDManager>)deviceInstallationUUIDManager;
+- (instancetype)initWithParams:(NSDictionary *)params deviceInstallationUUIDManager:(id<ABI39_0_0EXConstantsDeviceInstallationUUIDManager>)deviceInstallationUUIDManager;
 
 @end
 

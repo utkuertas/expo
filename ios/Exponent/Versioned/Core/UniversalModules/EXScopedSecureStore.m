@@ -41,7 +41,7 @@
 }
 
 // We must override this method so that items saved in standalone apps on SDK 40 and below,
-// which were scoped by prefixing the validated key with the experienceId, can still be
+// which were scoped by prefixing the validated key with the experienceScopeKey, can still be
 // found in SDK 41 and up. This override can be removed in SDK 45.
 - (NSString *)_getValueWithKey:(NSString *)key withOptions:(NSDictionary *)options error:(NSError **)error
 {
@@ -67,7 +67,7 @@
     // If we don't find anything under the scopedKey, we want to return
     // the original error from searching for the unscoped key.
   }
-  
+
   *error = searchError;
   return nil;
 }
