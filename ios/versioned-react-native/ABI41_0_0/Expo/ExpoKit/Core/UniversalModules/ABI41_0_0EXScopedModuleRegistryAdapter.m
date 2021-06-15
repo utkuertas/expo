@@ -58,7 +58,7 @@
 #if __has_include(<ABI41_0_0EXFacebook/ABI41_0_0EXFacebook.h>)
   // only override in Expo Go
   if ([params[@"constants"][@"appOwnership"] isEqualToString:@"expo"]) {
-    ABI41_0_0EXScopedFacebook *scopedFacebook = [[ABI41_0_0EXScopedFacebook alloc] initWithExperienceScopeKey:experienceScopeKey andParams:params:params];
+    ABI41_0_0EXScopedFacebook *scopedFacebook = [[ABI41_0_0EXScopedFacebook alloc] initWithExperienceScopeKey:experienceScopeKey andParams:params];
     [moduleRegistry registerExportedModule:scopedFacebook];
   }
 #endif

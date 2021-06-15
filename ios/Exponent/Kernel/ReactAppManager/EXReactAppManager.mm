@@ -115,12 +115,12 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
   NSAssert((_delegate != nil), @"Cannot init react app without EXReactAppManagerDelegate");
   [self _invalidateAndClearDelegate:NO];
   [self computeVersionSymbolPrefix];
-  
+
   if ([self isReadyToLoad]) {
     Class versionManagerClass = [self versionedClassFromString:@"EXVersionManager"];
     Class bridgeClass = [self versionedClassFromString:@"RCTBridge"];
     Class rootViewClass = [self versionedClassFromString:@"RCTRootView"];
-    
+
     _versionManager = [[versionManagerClass alloc] initWithParams:[self extraParams]
                                                          manifest:_appRecord.appLoader.manifest
                                                      fatalHandler:handleFatalReactError
@@ -138,7 +138,7 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
 
     [self setupWebSocketControls];
     [_delegate reactAppManagerIsReadyForLoad:self];
-    
+
     NSAssert([_reactBridge isLoading], @"React bridge should be loading once initialized");
     [_versionManager bridgeWillStartLoading:_reactBridge];
   }
@@ -149,6 +149,7 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
   // we allow the vanilla RN dev menu in some circumstances.
   BOOL isStandardDevMenuAllowed = [EXEnvironment sharedEnvironment].isDetached;
   NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{
+    @"manifest": _appRecord.appLoader.manifest.rawManifestJSON,
     @"constants": @{
         @"linkingUri": RCTNullIfNil([EXKernelLinkingManager linkingUriForExperienceUri:_appRecord.appLoader.manifestUrl useLegacy:[self _compareVersionTo:27] == NSOrderedAscending]),
         @"experienceUrl": RCTNullIfNil(_appRecord.appLoader.manifestUrl? _appRecord.appLoader.manifestUrl.absoluteString: nil),
@@ -303,7 +304,7 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
   }
   [self _stopObservingBridgeNotifications];
   [self _startObservingBridgeNotificationsForBridge:bridge];
-  
+
   if ([self enablesDeveloperTools]) {
     if ([_appRecord.appLoader supportsBundleReload]) {
       [_appRecord.appLoader forceBundleReload];
@@ -312,7 +313,7 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
       [[EXKernel sharedInstance] reloadAppWithExperienceScopeKey:_appRecord.experienceScopeKey];
     }
   }
-  
+
   _loadCallback = loadCallback;
   if (_appRecord.appLoader.status == kEXAppLoaderStatusHasManifestAndBundle) {
     // finish loading immediately (app loader won't call this since it's already done)
@@ -348,10 +349,10 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
   if (_appRecord.experienceScopeKey) {
     [[EXKernel sharedInstance].serviceRegistry.errorRecoveryManager setError:error forExperienceScopeKey:_appRecord.experienceScopeKey];
   }
-  
+
   // react won't post this for us
   [[NSNotificationCenter defaultCenter] postNotificationName:[self versionedString:RCTJavaScriptDidFailToLoadNotification] object:error];
-  
+
   if (_loadCallback) {
     if ([self _compareVersionTo:22] == NSOrderedAscending) {
       SDK21RCTSourceLoadBlock legacyLoadCallback = (SDK21RCTSourceLoadBlock)_loadCallback;
@@ -368,7 +369,7 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
 - (void)_startObservingBridgeNotificationsForBridge:(RCTBridge *)bridge
 {
   NSAssert(bridge, @"Must subscribe to loading notifs for a non-null bridge");
-  
+
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(_handleJavaScriptStartLoadingEvent:)
                                                name:[self versionedString:RCTJavaScriptWillStartLoadingNotification]
@@ -423,7 +424,7 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
     if (_appRecord.viewController) {
       [_appRecord.viewController hideLoadingProgressWindow];
     }
-    
+
     // TODO: To be removed once SDK 38 is phased out
     // Above SDK 38 this code is invoked in different place
     if ([self _compareVersionTo:39] == NSOrderedAscending) {
@@ -453,7 +454,7 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
     dispatch_async(dispatch_get_main_queue(), ^{
       UM_ENSURE_STRONGIFY(self);
       [self.delegate reactAppManagerAppContentDidAppear:self];
-      
+
       if ([self _compareVersionTo:38] == NSOrderedDescending) {
         // Post SDK 38 code
         // Up to SDK 38 this code is invoked in different place
@@ -483,7 +484,7 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
     [_viewTestTimer invalidate];
     _viewTestTimer = nil;
   }
-  
+
   // SplashScreen.preventAutoHide is called despite actual JS method call.
   // Prior SDK 39, SplashScreen was basing on started & finished flags that are set via legacy Expo.SplashScreen JS methods calls.
   EXSplashScreenService *splashScreenService = (EXSplashScreenService *)[UMModuleRegistryProvider getSingletonModuleForClass:[EXSplashScreenService class]];
@@ -525,13 +526,13 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
 
     // Remove once SDK 38 is phased out.
     id<PreSDK39EXSplashScreenManagerProtocol> splashManager = [self _preSDK39AppLoadingManagerInstance];
-    
+
     // SplashScreen: at this point SplashScreen is prevented from autohiding,
     // so we can safely hide it when the flags set.
     if (!splashManager || !splashManager.started || splashManager.finished) {
       [_viewTestTimer invalidate];
       _viewTestTimer = nil;
-      
+
       EXSplashScreenService *splashScreenService = (EXSplashScreenService *)[UMModuleRegistryProvider getSingletonModuleForClass:[EXSplashScreenService class]];
       [splashScreenService hideSplashScreenFor:(UIViewController *) _appRecord.viewController
                                successCallback:^(BOOL hasEffect) {}
@@ -705,7 +706,7 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
   if (!_validatedVersion || _validatedVersion.length == 0 || [_validatedVersion isEqualToString:@"UNVERSIONED"]) {
     return NSOrderedDescending;
   }
-  
+
   NSUInteger projectVersionNumber = _validatedVersion.integerValue;
   if (projectVersionNumber == version) {
     return NSOrderedSame;
@@ -736,7 +737,7 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
   if (manifest && manifest.appKey) {
     return manifest.appKey;
   }
-  
+
   NSURL *bundleUrl = [self bundleUrl];
   if (bundleUrl) {
     NSURLComponents *components = [NSURLComponents componentsWithURL:bundleUrl resolvingAgainstBaseURL:YES];
@@ -747,7 +748,7 @@ typedef void (^SDK21RCTSourceLoadBlock)(NSError *error, NSData *source, int64_t 
       }
     }
   }
-  
+
   return @"main";
 }
 

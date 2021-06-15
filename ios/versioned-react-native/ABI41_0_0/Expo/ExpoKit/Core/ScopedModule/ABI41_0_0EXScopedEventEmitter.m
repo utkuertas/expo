@@ -18,7 +18,7 @@
   return nil;
 }
 
-- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey kernelServiceDelegate:(id)kernelServiceInstance params:(NSDictionary *)params
+- (instancetype)initWithExperienceStableLegacyId:(NSString *)experienceStableLegacyId experienceScopeKey:(NSString *)experienceScopeKey kernelServiceDelegate:(id)kernelServiceInstance params:(NSDictionary *)params
 {
   if (self = [super init]) {
     _experienceScopeKey = experienceScopeKey;
@@ -26,7 +26,7 @@
   return self;
 }
 
-- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey kernelServiceDelegates:(NSDictionary *)kernelServiceInstances params:(NSDictionary *)params
+- (instancetype)initWithExperienceStableLegacyId:(NSString *)experienceStableLegacyId experienceScopeKey:(NSString *)experienceScopeKey kernelServiceDelegates:(NSDictionary *)kernelServiceInstances params:(NSDictionary *)params
 {
   if (self = [super init]) {
     _experienceScopeKey = experienceScopeKey;

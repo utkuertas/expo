@@ -5,7 +5,8 @@
 
 @implementation EXScopedNotificationCategoryMigrator
 
-+ (void)migrateLegacyScopedCategoryIdentifiersForProjectWithExperienceStableLegacyId:(NSString *)experienceStableLegacyId experienceScopeKey:(NSString *)experienceScopeKey
++ (void)migrateLegacyScopedCategoryIdentifiersForProjectWithExperienceStableLegacyId:(NSString *)experienceStableLegacyId
+                                                                  experienceScopeKey:(NSString *)experienceScopeKey
 {
   [EXScopedNotificationCategoryMigrator renameLegacyCategoryIdentifiersForExperienceWithStableLegacyId:experienceStableLegacyId withBlock:^(UNNotificationCategory *oldCategory) {
     NSString *unscopedLegacyCategoryId = [EXScopedNotificationsUtils unscopedLegacyCategoryIdentifierWithId:oldCategory.identifier forExperienceStableLegacyId:experienceStableLegacyId];

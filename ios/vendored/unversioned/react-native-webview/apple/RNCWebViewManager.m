@@ -31,7 +31,8 @@ RCT_ENUM_CONVERTER(WKContentMode, (@{
   BOOL _shouldStartLoad;
 }
 
-- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey
+- (instancetype)initWithExperienceStableLegacyId:(NSString *)experienceStableLegacyId
+                        experienceScopeKey:(NSString *)experienceScopeKey
                      kernelServiceDelegate:(id)kernelServiceInstance
                                     params:(NSDictionary *)params
 {

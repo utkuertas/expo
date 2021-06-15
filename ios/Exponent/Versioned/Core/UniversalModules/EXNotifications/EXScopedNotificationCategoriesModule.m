@@ -76,11 +76,11 @@
 {
   if (isInExpoGo) {
     // Changed scoping prefix in SDK 41 FROM "experienceId-" to ESCAPED "experienceId/"
-    [EXScopedNotificationCategoryMigrator migrateLegacyScopedCategoryIdentifiersForProjectWithExperienceStableLegacyId:experienceStableLegacyId];
+    [EXScopedNotificationCategoryMigrator migrateLegacyScopedCategoryIdentifiersForProjectWithExperienceStableLegacyId:experienceStableLegacyId
+                                                                                                    experienceScopeKey:experienceScopeKey];
   } else {
     // Used to prefix with "experienceId-" even in standalone apps in SDKs <= 40, so we need to unscope those
-    [EXScopedNotificationCategoryMigrator unscopeLegacyCategoryIdentifiersForProjectWithExperienceStableLegacyId:experienceStableLegacyId
-                                                                                              experienceScopeKey:experienceScopeKey];
+    [EXScopedNotificationCategoryMigrator unscopeLegacyCategoryIdentifiersForProjectWithExperienceStableLegacyId:experienceStableLegacyId];
   }
 }
 

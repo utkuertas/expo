@@ -35,7 +35,8 @@ ABI40_0_0RCT_ENUM_CONVERTER(WKContentMode, (@{
 
 ABI40_0_0EX_EXPORT_SCOPED_MODULE(ABI40_0_0RNCWebViewManager, ABI40_0_0EXKernelServiceNone)
 
-- (instancetype)initWithExperienceScopeKey:(NSString *)experienceScopeKey
+- (instancetype)initWithExperienceStableLegacyId:(NSString *)experienceStableLegacyId
+                        experienceScopeKey:(NSString *)experienceScopeKey
                      kernelServiceDelegate:(id)kernelServiceInstance
                               params:(NSDictionary *)params
 {

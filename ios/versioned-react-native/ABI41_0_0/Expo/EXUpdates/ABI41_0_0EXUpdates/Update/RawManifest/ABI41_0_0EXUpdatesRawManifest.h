@@ -51,6 +51,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSDictionary *)iosConfig;
 - (nullable NSString *)hostUri;
 - (nullable NSString *)orientation;
+- (nullable NSDictionary *)experiments;
+- (nullable NSDictionary *)developer;
 
 # pragma mark - Derived Methods
 
