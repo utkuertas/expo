@@ -9,7 +9,7 @@
 #import "EXAppLoadingCancelView.h"
 #import "EXManagedAppSplashScreenViewProvider.h"
 #import "EXManagedAppSplashScreenConfigurationBuilder.h"
-#import "EXManagedAppSplashScreenController.h"
+#import "EXManagedAppSplashScreenViewController.h"
 #import "EXHomeAppSplashScreenViewProvider.h"
 #import "EXEnvironment.h"
 #import "EXErrorRecoveryManager.h"
@@ -418,7 +418,7 @@ NS_ASSUME_NONNULL_BEGIN
     
     UIView *rootView = self.view;
     UIView *splashScreenView = [provider createSplashScreenView];
-    EXManagedAppSplashScreenController *controller = [[EXManagedAppSplashScreenController alloc] initWithRootView:rootView
+    EXManagedAppSplashScreenViewController *controller = [[EXManagedAppSplashScreenViewController alloc] initWithRootView:rootView
                                                                                                  splashScreenView:splashScreenView];
     [splashScreenService showSplashScreenFor:self
                       splashScreenController:controller
