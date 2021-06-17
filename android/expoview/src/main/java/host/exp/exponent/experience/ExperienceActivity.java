@@ -57,7 +57,7 @@ import host.exp.exponent.experience.splashscreen.ManagedAppSplashScreenConfigura
 import host.exp.exponent.experience.splashscreen.ManagedAppSplashScreenViewController;
 import host.exp.exponent.experience.splashscreen.ManagedAppSplashScreenViewProvider;
 import host.exp.exponent.kernel.DevMenuManager;
-import host.exp.exponent.kernel.ExperienceId;
+import host.exp.exponent.kernel.ExperienceKey;
 import host.exp.exponent.kernel.ExponentError;
 import host.exp.exponent.kernel.ExponentUrls;
 import host.exp.exponent.kernel.Kernel;
@@ -521,8 +521,7 @@ public class ExperienceActivity extends BaseExperienceActivity implements Expone
     soloaderInit();
 
     try {
-      mExperienceIdString = manifest.getID();
-      mExperienceId = ExperienceId.create(mExperienceIdString);
+      mExperienceKey = ExperienceKey.fromRawManifest(manifest);
       AsyncCondition.notify(KernelConstants.EXPERIENCE_ID_SET_FOR_ACTIVITY_KEY);
     } catch (JSONException e) {
       KernelProvider.getInstance().handleError("No ID found in manifest.");
@@ -570,14 +569,6 @@ public class ExperienceActivity extends BaseExperienceActivity implements Expone
       mReactRootView.loadVersion(mDetachSdkVersion).construct(ExperienceActivity.this);
       setReactRootView((View) mReactRootView.get());
 
-      String id;
-      try {
-        id = Exponent.getInstance().encodeExperienceId(mExperienceIdString);
-      } catch (UnsupportedEncodingException e) {
-        KernelProvider.getInstance().handleError("Can't URL encode manifest ID");
-        return;
-      }
-
       if (isDebugModeEnabled()) {
         mNotification = finalNotificationObject;
         mJSBundlePath = "";
@@ -622,7 +613,8 @@ public class ExperienceActivity extends BaseExperienceActivity implements Expone
   }
 
   public void onEventMainThread(ReceivedNotificationEvent event) {
-    if (event.experienceId.equals(mExperienceIdString)) {
+    // TODO(wschurman): investigate removal, this probably is no longer used
+    if (event.experienceScopeKey.equals(mExperienceKey.getScopeKey())) {
       try {
         RNObject rctDeviceEventEmitter = new RNObject("com.facebook.react.modules.core.DeviceEventManagerModule$RCTDeviceEventEmitter");
         rctDeviceEventEmitter.loadVersion(mDetachSdkVersion);
@@ -818,8 +810,8 @@ public class ExperienceActivity extends BaseExperienceActivity implements Expone
     }
   }
 
-  public String getExperienceId() {
-    return mExperienceIdString;
+  public ExperienceKey getExperienceKey() {
+    return mExperienceKey;
   }
 
   /**
