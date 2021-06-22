@@ -80,10 +80,12 @@ class ArticleScreen extends Component {
   }
 
   onShareLinkPress = async () => {
-    const shareOptions = {
+    let shareOptions = {
       messageHeader: this.props.article.title,
       messageBody: `Checkout my new article!`,
     };
+      let linkProperties = { feature: 'share', channel: 'RNApp' }
+      let controlParams = { $android_url: 'http://xxxxx.app.link/android', $ios_url: 'http://xxxxxxx.app.link/ios' }
     await this._branchUniversalObject.showShareSheet(shareOptions);
   };
 }
