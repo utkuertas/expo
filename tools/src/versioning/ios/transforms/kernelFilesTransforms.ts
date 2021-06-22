@@ -26,7 +26,7 @@ export function kernelFilesTransforms(
         paths: ['EXAppViewController.m'],
         ...withRollback(rollback, {
           replace: /(?<=\sRCTOverrideAppearancePreference\(appearancePreference\);)/,
-          with: `\n#if __has_include(<${versionName}React/${versionName}RCTAppearance.h>)\n  ${versionName}RCTOverrideAppearancePreference(appearancePreference);\n#endif`,
+          with: `\n#ifdef INCLUDES_VERSIONED_CODE\n#if __has_include(<${versionName}React/${versionName}RCTAppearance.h>)\n  ${versionName}RCTOverrideAppearancePreference(appearancePreference);\n#endif\n#endif`,
         }),
       },
     ],
